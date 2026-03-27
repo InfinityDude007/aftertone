@@ -1,9 +1,12 @@
-# IDE files
+# ide files
 .vscode
 
 # macOS
 .DS_Store
 
-# Environments
+# environments
 .venv
 .env
+
+# ssl certificates
+*.crt
