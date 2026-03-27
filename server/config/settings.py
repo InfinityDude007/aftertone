@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-import environ
+import os, environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,14 +31,20 @@ CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
 
 
 # database config from env
-SUPABASE_URL = env("SUPABASE_URL", default="")
-SUPABASE_KEY = env("SUPABASE_KEY", default="")
+SUPABASE = {
+    "NAME": env("SUPABASE_NAME", default=""),
+    "USER": env("SUPABASE_USER", default=""),
+    "PASSWORD": env("SUPABASE_PASSWORD", default=""),
+    "HOST": env("SUPABASE_HOST", default=""),
+    "PORT": env("SUPABASE_PORT", default=""),
+    "CERT": env("SUPABASE_CERT", default="")
+}
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders'
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,13 +86,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = "config.asgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
+# database setup for supabase
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': SUPABASE["NAME"],
+        'USER': SUPABASE["USER"],
+        'PASSWORD': SUPABASE["PASSWORD"],
+        'HOST': SUPABASE["HOST"],
+        'PORT': SUPABASE["PORT"],
+        'OPTIONS': {
+            'sslmode': 'require',
+            'sslrootcert': os.path.join(BASE_DIR, SUPABASE["CERT"]),
+        },
     }
 }
 
