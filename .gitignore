@@ -10,3 +10,6 @@
 
 # ssl certificates
 *.crt
+
+# python
+__pycache__
